@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Results</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Topic</th>
+                    <th>Votes</th>
+                </tr>
+            </thead>
+            <tbody id="results-table"></tbody>
+        </table>
+    </div>
+
+    <script>
+        fetch('http://localhost:3003/results')
+        .then(response => response.json())
+        .then(topics => {
+            const resultsTable = document.getElementById('results-table');
+            topics.forEach(topic => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${topic.title}</td><td>${topic.votes}</td>`;
+                resultsTable.appendChild(row);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>

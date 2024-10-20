@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+            text-align: center;
+        }
+        .form-group {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px;
+            background-color: blue;
+            color: white;
+            border: none;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Vote on a Topic</h1>
+        <div id="topics-list"></div>
+    </div>
+
+    <script>
+        fetch('http://localhost:3001/topics')
+        .then(response => response.json())
+        .then(topics => {
+            const topicsList = document.getElementById('topics-list');
+            topics.forEach(topic => {
+                const button = document.createElement('button');
+                button.textContent = `Vote for ${topic.title}`;
+                button.onclick = () => {
+                    fetch('http://localhost:3002/vote', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ topicId: topic.id }),
+                    })
+                    .then(response => response.json())
+                    .then(data => alert(data.message))
+                    .catch(error => console.error('Error:', error));
+                };
+                topicsList.appendChild(button);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>
